@@ -102,8 +102,8 @@ def test_operator():
     assert list(op.dispatch("__eq__", 2)) == [False]
     assert list(op == 4) == [True]
     assert list(op == 4) == [False]
-    assert (op == 6) is True
-    assert (op == 6) is False
+    assert op == 6
+    assert (op == 6) == False  # noqa
 
     op = DiffTool([1, 2], [3]).op
     assert list(op.dispatch("__iter__").map(list)) == [[1, 2], [3]]
