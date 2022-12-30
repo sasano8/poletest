@@ -1,14 +1,6 @@
 import pytest
 
-from poletest.difftool import (
-    FsspecDiffTool,
-    DiffTool,
-    Raised,
-    OpTool,
-    Reporter,
-    ReporterBase,
-    CanNotCompareError,
-)
+from poletest.difftool import CanNotCompareError, DiffTool, Raised, Reporter
 
 
 class ReturnValue:
@@ -59,22 +51,22 @@ def test_reporter():
     assert list(r) == [1]
     assert str(r) == "[(0, '', <class 'int'>, 1)]"
     assert repr(r) == "[0]: [] - <class 'int'> - 1"
-    assert bool(r) == True
+    assert bool(r) is True
 
     r = r == 1
     assert list(r) == [1, 1]
     assert str(r) == "[(0, '', <class 'int'>, 1), (1, '', <class 'int'>, 1)]"
     assert repr(r) == "[0]: [] - <class 'int'> - 1\n[1]: [] - <class 'int'> - 1"
-    assert bool(r) == True
+    assert bool(r) is True
 
     r = Reporter([1, 2])
     assert list(r) == [1, 2]
-    assert bool(r) == False
+    assert bool(r) is False
 
     r = Reporter([1])
     r = r == 2
     assert list(r) == [2, 1]
-    assert bool(r) == False
+    assert bool(r) is False
 
     assert Reporter([1]) == 1
 
@@ -110,11 +102,11 @@ def test_operator():
     assert list(op.dispatch("__eq__", 2)) == [False]
     assert list(op == 4) == [True]
     assert list(op == 4) == [False]
-    assert (op == 6) == True
-    assert (op == 6) == False
+    assert (op == 6) is True
+    assert (op == 6) is False
 
-    op = DiffTool([1,2], [3]).op
-    assert list(op.dispatch("__iter__").map(list)) == [[1,2],[3]]
+    op = DiffTool([1, 2], [3]).op
+    assert list(op.dispatch("__iter__").map(list)) == [[1, 2], [3]]
 
 
 def test_base():
@@ -136,5 +128,3 @@ def test_base():
     assert list(t.dispatch("do", "1")) == ["1", "1"]
     assert list(t.dispatch("do", 1)) == [1, "1"]
     assert not t.dispatch("do", 1)
-
-
