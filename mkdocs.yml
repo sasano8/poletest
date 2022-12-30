@@ -1,0 +1,11 @@
+INHERIT: ./common/mkdocs_base.yml
+
+site_name: ポートフォリオ
+# site_description: xxxxx
+# site_url: https://xxxxxx.ys-method.com/
+# repo_name: sasano8/xxxxx
+# repo_url: https://github.com/sasano8/xxxxxxx/
+edit_uri: "edit/main/docs/"
+
+nav:
+  - introduction: "index.md"
