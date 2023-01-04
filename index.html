@@ -355,40 +355,50 @@
 
 <h1 id="index">index</h1>
 <h2 id="example">example</h2>
-<div class="highlight"><pre><span></span><code>from poletest.difftool import DiffTool, Raised
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">poletest.difftool</span> <span class="kn">import</span> <span class="n">DiffTool</span><span class="p">,</span> <span class="n">Raised</span>
 
-class Person:
-  def greet(self, suffix=&quot;&quot;):
-    raise NotImplementedError()
+<span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+  <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-class A(Person):
-  def greet(self, name=&quot;&quot;):
-    return f&quot;My name is {name}.&quot;
+<span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;My name is </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span>
 
-class B(Person):
-  def greet(self, name=&quot;&quot;):
-    return f&quot;I&#39;m {name}.&quot;
+<span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;I&#39;m </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span>
 
-class C(Person):
-  def greet(self):
-    return &quot;Hi.&quot;
+<span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">Person</span><span class="p">):</span>
+  <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;Hi.&quot;</span>
 
-tool = DiffTool(A(), B(), C())
+<span class="n">tool</span> <span class="o">=</span> <span class="n">DiffTool</span><span class="p">(</span><span class="n">A</span><span class="p">(),</span> <span class="n">B</span><span class="p">(),</span> <span class="n">C</span><span class="p">())</span>
 
-assert list(tool(&quot;greet&quot;, &quot;Bob&quot;)) == [
-    &#39;My name is Bob.&#39;,
-    &quot;I&#39;m Bob.&quot;,
-    Raised(TypeError, &#39;greet() takes 1 positional argument but 2 were given&#39;)
-]
+<span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">tool</span><span class="p">(</span><span class="s2">&quot;greet&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="p">[</span>
+    <span class="s1">&#39;My name is Bob.&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;I&#39;m Bob.&quot;</span><span class="p">,</span>
+    <span class="n">Raised</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="s1">&#39;greet() takes 1 positional argument but 2 were given&#39;</span><span class="p">)</span>
+<span class="p">]</span>
 
-# Take the first result as positive and compare it with the rest
-assert not tool(&quot;greet&quot;, &quot;Bob&quot;)
+<span class="c1"># Take the first result as positive and compare it with the rest</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="n">tool</span><span class="p">(</span><span class="s2">&quot;greet&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span>
 
-tool = DiffTool(A(), A())
-assert tool(&quot;greet&quot;, &quot;Bob&quot;) # All result are same.
+<span class="n">tool</span> <span class="o">=</span> <span class="n">DiffTool</span><span class="p">(</span><span class="n">A</span><span class="p">(),</span> <span class="n">A</span><span class="p">())</span>
+<span class="k">assert</span> <span class="n">tool</span><span class="p">(</span><span class="s2">&quot;greet&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span> <span class="c1"># All result are same.</span>
 
-tool = DiffTool(A(), B())
-assert tool(&quot;greet&quot;, &quot;Bob&quot;) # Raise Error.
+<span class="n">tool</span> <span class="o">=</span> <span class="n">DiffTool</span><span class="p">(</span><span class="n">A</span><span class="p">(),</span> <span class="n">B</span><span class="p">())</span>
+<span class="k">assert</span> <span class="n">tool</span><span class="p">(</span><span class="s2">&quot;greet&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">)</span> <span class="c1"># Raise Error.</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">FsspecDiffTool</span><span class="p">(</span><span class="n">DiffTool</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;exists&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="s2">&quot;mkdir&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_senario</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 
