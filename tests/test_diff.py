@@ -1,7 +1,8 @@
 import pytest
 
-from poletest.dispatcher import Dispatcher, Raised, Reporter
+from poletest.dispatcher import Dispatcher, Reporter
 from poletest.exceptions import CanNotCompareError
+from poletest.matcher import Raised
 
 
 class ReturnValue:

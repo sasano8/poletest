@@ -1,7 +1,6 @@
-from typing import Any, Callable, Generator, Type, Union
+from typing import Any, Type
 
-from .equallizer import equallize
-from .matcher import Generated, Raised
+from .equallizer import DefaultEqualizer, Equalizer
 from .reporter import Reporter
 
 
@@ -33,11 +32,11 @@ class Dispatcher:
     def __init__(
         self,
         *args: Any,
-        equalizer: Union[bool, Callable[[Any], Any]] = equallize,
+        equalizer: Equalizer = DefaultEqualizer(),
         reporter: Type = Reporter,
     ):
         self.targes = args
-        self.equalizer = equalizer or (lambda x: x)
+        self.equalizer = equalizer or DefaultEqualizer()
         self.reporter = reporter or Reporter
 
     def __iter__(self):
@@ -49,23 +48,13 @@ class Dispatcher:
             try:
                 result = func(*args, **kwargs)
             except BaseException as e:
-                result = self.on_error(e)
-
-            result = self.on_complete(result)
+                result = self.equalizer.on_error(e)
             yield result
-
-    def on_error(self, exc: BaseException):
-        return Raised(exc.__class__, str(exc))
-
-    def on_complete(self, result: Any):
-        if isinstance(result, Generator):
-            result = Generated(result)
-        return result
 
     def dispatch(self, __funcname, *args, **kwargs):
         results = self._dispatch(__funcname, *args, **kwargs)
-        equalize = self.equalizer
-        results = self.reporter(equalize(x) for x in results)
+        on_complete = self.equalizer.on_complete
+        results = self.reporter(on_complete(x) for x in results)
         return results
 
     def __call__(self, __funcname, *args, **kwargs):

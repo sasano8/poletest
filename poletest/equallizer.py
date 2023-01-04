@@ -1,6 +1,7 @@
 from datetime import datetime
+from typing import Generator
 
-from .matcher import Raised
+from .matcher import Generated, Raised
 
 
 def equallize_datetime(dt: datetime):
@@ -8,8 +9,11 @@ def equallize_datetime(dt: datetime):
 
 
 def equallize(obj):
-    if isinstance(obj, Raised):
+    if isinstance(obj, (Raised, Generated)):
         return obj
+
+    if isinstance(obj, Generator):
+        return Generated(obj)
 
     if isinstance(obj, (str, int, float, bool)):
         return obj
@@ -23,3 +27,19 @@ def equallize(obj):
         return equallize_datetime(obj)
     else:
         return obj
+
+
+class Equalizer:
+    def on_error(self, exc: BaseException):
+        raise NotImplementedError()
+
+    def on_complete(self, result):
+        raise NotImplementedError()
+
+
+class DefaultEqualizer(Equalizer):
+    def on_error(self, exc: BaseException):
+        return Raised(exc.__class__, str(exc))
+
+    def on_complete(self, result):
+        return equallize(result)
