@@ -44,19 +44,23 @@ class Dispatcher:
         return iter(self.targes)
 
     def _dispatch(self, __funcname, *args, **kwargs):
-        results = []
         for x in self:
             func = getattr(x, __funcname)
             try:
                 result = func(*args, **kwargs)
             except BaseException as e:
-                result = Raised(e.__class__, str(e))
+                result = self.on_error(e)
 
-            if isinstance(result, Generator):
-                result = Generated(result)
+            result = self.on_complete(result)
+            yield result
 
-            results.append(result)
-        return results
+    def on_error(self, exc: BaseException):
+        return Raised(exc.__class__, str(exc))
+
+    def on_complete(self, result: Any):
+        if isinstance(result, Generator):
+            result = Generated(result)
+        return result
 
     def dispatch(self, __funcname, *args, **kwargs):
         results = self._dispatch(__funcname, *args, **kwargs)
