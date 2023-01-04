@@ -1,6 +1,6 @@
 import pytest
 
-from poletest.dispatcher import DiffTool, Raised, Reporter
+from poletest.dispatcher import Dispatcher, Raised, Reporter
 from poletest.exceptions import CanNotCompareError
 
 
@@ -79,7 +79,7 @@ def test_reporter():
 def test_base_0():
     obj_1 = RaiseException()
 
-    t = DiffTool(obj_1)
+    t = Dispatcher(obj_1)
     r = t.dispatch("do", 1)
     assert isinstance(r, Reporter)
     assert list(r) == [1]
@@ -98,7 +98,7 @@ def test_operator():
     assert obj == 0
     assert obj == 1
 
-    op = DiffTool(obj).op
+    op = Dispatcher(obj).op
     assert list(op.dispatch("__eq__", 2)) == [True]
     assert list(op.dispatch("__eq__", 2)) == [False]
     assert list(op == 4) == [True]
@@ -106,7 +106,7 @@ def test_operator():
     assert op == 6
     assert (op == 6) == False  # noqa
 
-    op = DiffTool([1, 2], [3]).op
+    op = Dispatcher([1, 2], [3]).op
     assert list(op.dispatch("__iter__").map(list)) == [[1, 2], [3]]
 
 
@@ -114,7 +114,7 @@ def test_base():
     obj_1 = ReturnValue()
     obj_2 = RaiseException()
 
-    t = DiffTool(obj_1, obj_2)
+    t = Dispatcher(obj_1, obj_2)
     assert t.dispatch("do", 1) == 1
     assert t.dispatch("do", -1).equals(-1, Raised(cls=Exception, msg="-1"))
 
@@ -125,7 +125,7 @@ def test_base():
 
     obj_1 = ReturnValue()
     obj_2 = ReturnStr()
-    t = DiffTool(obj_1, obj_2)
+    t = Dispatcher(obj_1, obj_2)
     assert list(t.dispatch("do", "1")) == ["1", "1"]
     assert list(t.dispatch("do", 1)) == [1, "1"]
     assert not t.dispatch("do", 1)

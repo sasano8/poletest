@@ -1,11 +1,11 @@
-from typing import Any, Callable, Type, Union
+from typing import Any, Callable, Generator, Type, Union
 
-from .matcher import Raised
-from .reporter import Reporter
 from .equallizer import equallize
+from .matcher import Generated, Raised
+from .reporter import Reporter
 
 
-class OpTool:
+class Operator:
     def __init__(self, dispatcher):
         self.dispatcher = dispatcher
 
@@ -16,11 +16,11 @@ class OpTool:
     def dispatch(self, __funcname, *args, **kwargs):
         return self.__hook__(__funcname, args, kwargs)
 
-    # def __len__(self, *args, **kwargs):
-    #     return self.__hook__("__len__", args, kwargs)
+    def __len__(self, *args, **kwargs):
+        return self.__hook__("__len__", args, kwargs)
 
-    # def __iter__(self, *args, **kwargs):
-    #     return self.__hook__("__iter__", args, kwargs)
+    def __iter__(self, *args, **kwargs):
+        return self.__hook__("__iter__", args, kwargs)
 
     def __call__(self, *args, **kwargs):
         return self.__hook__("__call__", args, kwargs)
@@ -29,7 +29,7 @@ class OpTool:
         return self.__hook__("__eq__", args, kwargs)
 
 
-class DiffTool:
+class Dispatcher:
     def __init__(
         self,
         *args: Any,
@@ -52,6 +52,9 @@ class DiffTool:
             except BaseException as e:
                 result = Raised(e.__class__, str(e))
 
+            if isinstance(result, Generator):
+                result = Generated(result)
+
             results.append(result)
         return results
 
@@ -66,4 +69,4 @@ class DiffTool:
 
     @property
     def op(self):
-        return OpTool(self)
+        return Operator(self)
