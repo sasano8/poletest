@@ -3,7 +3,7 @@
 
 ## example
 
-```
+``` python
 from poletest.difftool import DiffTool, Raised
 
 class Person:
@@ -38,4 +38,17 @@ assert tool("greet", "Bob") # All result are same.
 
 tool = DiffTool(A(), B())
 assert tool("greet", "Bob") # Raise Error.
+```
+
+
+``` python
+class FsspecDiffTool(DiffTool):
+    def exists(self, *args, **kwargs):
+        return self.dispatch("exists", *args, **kwargs)
+
+    def mkdir(self, *args, **kwargs):
+        return self.dispatch("mkdir", *args, **kwargs)
+
+    def test_senario(self):
+        self.mkdir("test")
 ```

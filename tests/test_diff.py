@@ -1,6 +1,7 @@
 import pytest
 
-from poletest.difftool import CanNotCompareError, DiffTool, Raised, Reporter
+from poletest.dispatcher import DiffTool, Raised, Reporter
+from poletest.exceptions import CanNotCompareError
 
 
 class ReturnValue:

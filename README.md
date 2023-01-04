@@ -1,4 +1,4 @@
-# xml_json
+# poletest
 <!--
 [![Version](https://img.shields.io/pypi/v/asy)](https://pypi.org/project/asy)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -25,11 +25,5 @@ pre-commit install
 ## fomart script & test
 
 ``` shell
-make
+make format
 ```
-
-## running and debugging server
-
-To debug the json rpc server with vscode.
-
-- Run `Python: debug server` from `running and debugging`.
