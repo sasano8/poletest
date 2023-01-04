@@ -1,6 +1,6 @@
 from typing import Any, Callable, Type, Union
 
-from .objects import Raised
+from .matcher import Raised
 from .reporter import Reporter
 from .equallizer import equallize
 
