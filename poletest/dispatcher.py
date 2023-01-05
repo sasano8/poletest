@@ -1,7 +1,8 @@
 from typing import Any, Type
 
-from .equallizer import DefaultEqualizer, Equalizer
+from .equallizer import DefaultEqualizer
 from .reporter import Reporter
+from .interfaces import IDispatcher, IEqualizer
 
 
 class Operator:
@@ -28,11 +29,11 @@ class Operator:
         return self.__hook__("__eq__", args, kwargs)
 
 
-class Dispatcher:
+class Dispatcher(IDispatcher):
     def __init__(
         self,
         *args: Any,
-        equalizer: Equalizer = DefaultEqualizer(),
+        equalizer: IEqualizer = DefaultEqualizer(),
         reporter: Type = Reporter,
     ):
         self.targes = args
@@ -42,22 +43,9 @@ class Dispatcher:
     def __iter__(self):
         return iter(self.targes)
 
-    def _dispatch(self, __funcname, *args, **kwargs):
-        on_error = self.equalizer.on_error
-        on_complete = self.equalizer.on_complete
-
-        for x in self:
-            func = getattr(x, __funcname)
-            try:
-                result = func(*args, **kwargs)
-            except BaseException as e:
-                result = on_error(e)
-
-            result = on_complete(result)
-            yield result
-
     def dispatch(self, __funcname, *args, **kwargs):
-        results = self._dispatch(__funcname, *args, **kwargs)
+        funcs = self._dispatch(__funcname, *args, **kwargs)
+        results = self.equalizer.handle(funcs)
         results = self.reporter(results)
         return results
 

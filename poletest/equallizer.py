@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Generator
 
 from .matcher import Generated, Raised
+from .interfaces import IEqualizer
 
 
 def equallize_datetime(dt: datetime):
@@ -29,15 +30,7 @@ def equallize(obj):
         return obj
 
 
-class Equalizer:
-    def on_error(self, exc: BaseException):
-        raise NotImplementedError()
-
-    def on_complete(self, result):
-        raise NotImplementedError()
-
-
-class DefaultEqualizer(Equalizer):
+class DefaultEqualizer(IEqualizer):
     def on_error(self, exc: BaseException):
         return Raised(exc.__class__, str(exc))
 

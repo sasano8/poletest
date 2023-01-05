@@ -1,11 +1,11 @@
-from typing import Generator, Iterable, Tuple
+from typing import Generator, Iterable, Tuple, Iterator
 
 from .exceptions import CanNotCompareError
 
 
 class ReporterBase:
     def __init__(self, values: tuple):
-        if isinstance(values, (Generator, list, map, filter)):
+        if isinstance(values, (Generator, list, Iterator)):
             values = tuple(values)
         elif isinstance(values, ReporterBase):
             values = tuple(values)
