@@ -29,22 +29,22 @@ class Operator:
         return self.__hook__("__eq__", args, kwargs)
 
 
-class Dispatcher(IDispatcher):
+class Dispatcher:
     def __init__(
         self,
         *args: Any,
         equalizer: IEqualizer = DefaultEqualizer(),
         reporter: Type = Reporter,
     ):
-        self.targes = args
+        self.targets = IDispatcher(*args)
         self.equalizer = equalizer or DefaultEqualizer()
         self.reporter = reporter or Reporter
 
     def __iter__(self):
-        return iter(self.targes)
+        return iter(self.targets)
 
     def dispatch(self, __funcname, *args, **kwargs):
-        funcs = self._dispatch(__funcname, *args, **kwargs)
+        funcs = self.targets.dispatch(__funcname, *args, **kwargs)
         results = self.equalizer.handle(funcs)
         results = self.reporter(results)
         return results
