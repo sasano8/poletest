@@ -1,8 +1,8 @@
 from typing import Any, Type
 
 from .equallizer import DefaultEqualizer
-from .reporter import Reporter
 from .interfaces import IDispatcher, IEqualizer
+from .reporter import Reporter
 
 
 class Operator:

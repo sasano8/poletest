@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import Generator
 
-from .matcher import Generated, Raised
 from .interfaces import IEqualizer
+from .matcher import Generated, Raised
 
 
 def equallize_datetime(dt: datetime):

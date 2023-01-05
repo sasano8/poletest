@@ -1,4 +1,4 @@
-from typing import Generator, Iterable, Tuple, Iterator
+from typing import Generator, Iterable, Iterator, Tuple
 
 from .exceptions import CanNotCompareError
 
